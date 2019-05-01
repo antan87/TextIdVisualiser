@@ -11,7 +11,7 @@ namespace TextIdVisualiser
     /// Helper class for getting values from the resource manager set.
     /// </summary>
     /// <owner>Anton Patron</owner>
-    public class ResourceManagerHelper
+    public static class ResourceManagerHelper
     {
 
         /// <summary>
