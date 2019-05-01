@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TextIdVisualiser" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Filename" Type="System.String" Scope="User">
+      <Value Profile="(Default)">XPAND</Value>
+    </Setting>
+    <Setting Name="Directory_Path" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\Incit Xpand\Development\Development\Source\Resource\</Value>
+    </Setting>
+    <Setting Name="Launguage_Id" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1053</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
