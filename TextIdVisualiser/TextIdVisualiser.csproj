@@ -7,6 +7,9 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -55,10 +58,10 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="TestQuickInfoController.cs" />
-    <Compile Include="TestQuickInfoControllerProvider.cs" />
-    <Compile Include="TestQuickInfoSource.cs" />
-    <Compile Include="TestQuickInfoSourceProvider.cs" />
+    <Compile Include="QuickInfoController.cs" />
+    <Compile Include="QuickInfoControllerProvider.cs" />
+    <Compile Include="QuickInfoSource.cs" />
+    <Compile Include="QuickInfoSourceProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -8,9 +8,14 @@ using Microsoft.VisualStudio.Text.Operations;
 
 namespace TextIdVisualiser
 {
-    internal class TestQuickInfoSource : IAsyncQuickInfoSource
+    /// <summary>
+    /// THe quick info source.
+    /// </summary>
+    /// <owner>Anton Patron</owner>
+    /// <seealso cref="Microsoft.VisualStudio.Language.Intellisense.IAsyncQuickInfoSource" />
+    internal class QuickInfoSource : IAsyncQuickInfoSource
     {
-        private readonly TestQuickInfoSourceProvider m_provider;
+        private readonly QuickInfoSourceProvider m_provider;
         private readonly ITextBuffer m_subjectBuffer;
         private readonly Dictionary<string, string> m_dictionary;
         private bool m_isDisposed;
@@ -22,6 +27,13 @@ namespace TextIdVisualiser
                 this.m_isDisposed = true;
             }
         }
+        /// <summary>
+        /// Gets the quick information item asynchronous.
+        /// </summary>
+        /// <owner>Anton Patron</owner>
+        /// <param name="session">The session.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The <see cref="QuickInfoItem"/></returns>
         public Task<QuickInfoItem> GetQuickInfoItemAsync(IAsyncQuickInfoSession session, CancellationToken cancellationToken)
         {
             SnapshotPoint? subjectTriggerPoint = session.GetTriggerPoint(this.m_subjectBuffer.CurrentSnapshot);
@@ -44,7 +56,14 @@ namespace TextIdVisualiser
                 return Task.FromResult(new QuickInfoItem(null, searchText));
         }
 
-        public TestQuickInfoSource(Dictionary<string, string> values, TestQuickInfoSourceProvider provider, ITextBuffer subjectBuffer)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="QuickInfoSource"/> class.
+        /// </summary>
+        /// <owner>Anton Patron</owner>
+        /// <param name="values">The values.</param>
+        /// <param name="provider">The provider.</param>
+        /// <param name="subjectBuffer">The subject buffer.</param>
+        public QuickInfoSource(Dictionary<string, string> values, QuickInfoSourceProvider provider, ITextBuffer subjectBuffer)
         {
             this.m_provider = provider;
             this.m_subjectBuffer = subjectBuffer;

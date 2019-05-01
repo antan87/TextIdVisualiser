@@ -7,6 +7,10 @@ using System.Resources;
 
 namespace TextIdVisualiser
 {
+    /// <summary>
+    /// Helper class for getting values from the resource manager set.
+    /// </summary>
+    /// <owner>Anton Patron</owner>
     public class ResourceManagerHelper
     {
 
@@ -16,6 +20,11 @@ namespace TextIdVisualiser
         /// <owner>Anton Patron</owner>
         private static Dictionary<string, string> textValues;
 
+        /// <summary>
+        /// Gets the values.
+        /// </summary>
+        /// <owner>Anton Patron</owner>
+        /// <returns>The text values.</returns>
         private static Dictionary<string, string> GetValues()
         {
             var list = ResourceManagerHelper.GetTextvalues(ResourceManager.CreateFileBasedResourceManager(Settings.Default.Filename, Settings.Default.Directory_Path, null), new CultureInfo(Settings.Default.Launguage_Id), true);
@@ -29,7 +38,7 @@ namespace TextIdVisualiser
         /// <summary>
         /// Returns a sequence of text cluster id values for texts that match the search words.
         /// </summary>
-        /// <owner>Ragnar Roos</owner>
+        /// <owner>Anton Patron</owner>
         /// <param name="language">The <see cref="CultureInfo"/> specifying the language to search.</param>
         /// <param name="includeParentCultures">The value indicating if the result should include the parent languages.</param>
         /// <returns>A sequence of text cluster id values for texts that match the search words.</returns>
@@ -81,12 +90,17 @@ namespace TextIdVisualiser
             return result.Distinct();
         }
 
+        /// <summary>
+        /// Gets the text values.
+        /// </summary>
+        /// <owner>Anton Patron</owner>
+        /// <value>The text values.</value>
         public static Dictionary<string, string> TextValues
         {
             get
             {
                 if (ResourceManagerHelper.textValues == null)
-                    ResourceManagerHelper.textValues = GetValues();
+                    ResourceManagerHelper.textValues = ResourceManagerHelper.GetValues();
 
                 return ResourceManagerHelper.textValues;
             }
