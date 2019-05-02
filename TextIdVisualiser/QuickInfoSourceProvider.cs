@@ -15,7 +15,7 @@ namespace TextIdVisualiser
     [Export(typeof(IAsyncQuickInfoSourceProvider))]
     [Name("ToolTip QuickInfo Source")]
     [Order(Before = "Default Quick Info Presenter")]
-    [ContentType("text")]
+    [ContentType("CSharp")]
     internal class QuickInfoSourceProvider : IAsyncQuickInfoSourceProvider
     {
 

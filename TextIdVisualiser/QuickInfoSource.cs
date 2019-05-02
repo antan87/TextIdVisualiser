@@ -40,7 +40,7 @@ namespace TextIdVisualiser
         {
             SnapshotPoint? subjectTriggerPoint = session.GetTriggerPoint(this.m_subjectBuffer.CurrentSnapshot);
             if (!subjectTriggerPoint.HasValue)
-                return await Task.FromResult(new QuickInfoItem(null, null)).ConfigureAwait(false);
+                return await Task.FromResult(new QuickInfoItem(null, string.Empty)).ConfigureAwait(false);
 
             ITextSnapshot currentSnapshot = subjectTriggerPoint.Value.Snapshot;
 
