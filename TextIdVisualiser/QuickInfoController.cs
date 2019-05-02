@@ -9,7 +9,7 @@ namespace TextIdVisualiser
     /// The control for quick info.
     /// </summary>
     /// <owner>Anton Patron</owner>
-    /// <seealso cref="Microsoft.VisualStudio.Language.Intellisense.IIntellisenseController" />
+    /// <seealso cref="IIntellisenseController" />
     internal class QuickInfoController : IIntellisenseController
     {
         private ITextView m_textView;
@@ -64,7 +64,7 @@ namespace TextIdVisualiser
             {
                 ITrackingPoint triggerPoint = point.Value.Snapshot.CreateTrackingPoint(point.Value.Position, PointTrackingMode.Positive);
                 if (!this.m_provider.QuickInfoBroker.IsQuickInfoActive(this.m_textView))
-                    this.m_session = await this.m_provider.QuickInfoBroker.TriggerQuickInfoAsync(this.m_textView, triggerPoint);
+                    this.m_session = await this.m_provider.QuickInfoBroker.TriggerQuickInfoAsync(this.m_textView, triggerPoint).ConfigureAwait(false);
             }
         }
 

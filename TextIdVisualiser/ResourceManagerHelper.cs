@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Resources;
 
 namespace TextIdVisualiser
@@ -57,37 +56,39 @@ namespace TextIdVisualiser
             //
             // Get all the text clusters registered on this culture.
             //
-            ResourceSet resources = resourceManager.GetResourceSet(language, true, false);
-            if (resources == null)
-                return result;
-
-            //
-            // Find matches to the search words.
-            //
-            foreach (DictionaryEntry item in resources)
+            using (ResourceSet resources = resourceManager.GetResourceSet(language, true, false))
             {
-                string text = item.Value as string;
-                if (!(item.Key is string id) || text == null)
-                    continue;
+                if (resources == null)
+                    return result;
 
                 //
-                // Replace delimiters with space.
+                // Find matches to the search words.
                 //
-                text = text.Replace(".", " ");
-                text = text.Replace(",", " ");
-                text = text.Replace(":", " ");
-                text = text.Replace(";", " ");
-                text = text.Replace("'", " ");
-                text = text.Replace("-", " ");
+                foreach (DictionaryEntry item in resources)
+                {
+                    string text = item.Value as string;
+                    if (!(item.Key is string id) || text == null)
+                        continue;
 
-                //
-                // remove hotkey character.
-                //
-                text = text.Replace("&", string.Empty).Trim();
-                result.Add((Convert.ToInt32(id.Replace("ID", string.Empty)), text));
+                    //
+                    // Replace delimiters with space.
+                    //
+                    text = text.Replace(".", " ");
+                    text = text.Replace(",", " ");
+                    text = text.Replace(":", " ");
+                    text = text.Replace(";", " ");
+                    text = text.Replace("'", " ");
+                    text = text.Replace("-", " ");
+
+                    //
+                    // remove hotkey character.
+                    //
+                    text = text.Replace("&", string.Empty).Trim();
+                    result.Add((Convert.ToInt32(id.Replace("ID", string.Empty)), text));
+                }
+
+                return result;
             }
-
-            return result.Distinct();
         }
 
         /// <summary>

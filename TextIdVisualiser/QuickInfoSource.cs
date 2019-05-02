@@ -19,6 +19,7 @@ namespace TextIdVisualiser
         private readonly ITextBuffer m_subjectBuffer;
         private readonly Dictionary<string, string> m_dictionary;
         private bool m_isDisposed;
+
         public void Dispose()
         {
             if (!this.m_isDisposed)
@@ -27,6 +28,7 @@ namespace TextIdVisualiser
                 this.m_isDisposed = true;
             }
         }
+
         /// <summary>
         /// Gets the quick information item asynchronous.
         /// </summary>
@@ -34,11 +36,11 @@ namespace TextIdVisualiser
         /// <param name="session">The session.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The <see cref="QuickInfoItem"/></returns>
-        public Task<QuickInfoItem> GetQuickInfoItemAsync(IAsyncQuickInfoSession session, CancellationToken cancellationToken)
+        public async Task<QuickInfoItem> GetQuickInfoItemAsync(IAsyncQuickInfoSession session, CancellationToken cancellationToken)
         {
             SnapshotPoint? subjectTriggerPoint = session.GetTriggerPoint(this.m_subjectBuffer.CurrentSnapshot);
             if (!subjectTriggerPoint.HasValue)
-                return Task.FromResult(new QuickInfoItem(null, null));
+                return await Task.FromResult(new QuickInfoItem(null, null)).ConfigureAwait(false);
 
             ITextSnapshot currentSnapshot = subjectTriggerPoint.Value.Snapshot;
 
@@ -50,10 +52,10 @@ namespace TextIdVisualiser
             {
 
                 var applicableToSpan = currentSnapshot.CreateTrackingSpan(extent.Span.Start, searchText.Length, SpanTrackingMode.EdgeInclusive);
-                return Task.FromResult(new QuickInfoItem(applicableToSpan, value));
+                return await Task.FromResult(new QuickInfoItem(applicableToSpan, value)).ConfigureAwait(false);
             }
             else
-                return Task.FromResult(new QuickInfoItem(null, searchText));
+                return await Task.FromResult(new QuickInfoItem(null, searchText)).ConfigureAwait(false);
         }
 
         /// <summary>
