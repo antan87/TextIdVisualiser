@@ -14,7 +14,7 @@ namespace TextIdVisualiser
     /// <seealso cref="Microsoft.VisualStudio.Language.Intellisense.IIntellisenseControllerProvider" />
     [Export(typeof(IIntellisenseControllerProvider))]
     [Name("ToolTip QuickInfo Controller")]
-    [ContentType("text")]
+    [ContentType("CSharp")]
     internal class QuickInfoControllerProvider : IIntellisenseControllerProvider
     {
         /// <summary>
