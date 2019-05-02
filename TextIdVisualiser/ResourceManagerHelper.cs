@@ -71,16 +71,6 @@ namespace TextIdVisualiser
                         continue;
 
                     //
-                    // Replace delimiters with space.
-                    //
-                    text = text.Replace(".", " ");
-                    text = text.Replace(",", " ");
-                    text = text.Replace(":", " ");
-                    text = text.Replace(";", " ");
-                    text = text.Replace("'", " ");
-                    text = text.Replace("-", " ");
-
-                    //
                     // remove hotkey character.
                     //
                     text = text.Replace("&", string.Empty).Trim();
