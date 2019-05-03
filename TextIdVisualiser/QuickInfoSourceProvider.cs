@@ -43,7 +43,7 @@ namespace TextIdVisualiser
         /// <returns></returns>
         IAsyncQuickInfoSource IAsyncQuickInfoSourceProvider.TryCreateQuickInfoSource(ITextBuffer textBuffer)
         {
-            return new QuickInfoSource(ResourceManagerHelper.TextValues, this, textBuffer);
+            return new QuickInfoSource(this, textBuffer);
         }
     }
 }

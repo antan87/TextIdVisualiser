@@ -43,19 +43,8 @@ namespace TextIdVisualiser
         {
             if (this.m_textView == textView)
             {
-                this.m_textView.MouseHover -= this.OnTextViewMouseHover;
                 this.m_textView = null;
             }
-        }
-
-        /// <summary>
-        /// Called when textview is hoovered by the mouse.
-        /// </summary>
-        /// <owner>Anton Patron</owner>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="MouseHoverEventArgs"/> instance containing the event data.</param>
-        private async void OnTextViewMouseHover(object sender, MouseHoverEventArgs e)
-        {
         }
 
         /// <summary>
@@ -70,7 +59,6 @@ namespace TextIdVisualiser
             this.m_textView = textView;
             this.m_subjectBuffers = subjectBuffers;
             this.m_provider = provider;
-            this.m_textView.MouseHover += this.OnTextViewMouseHover;
         }
     }
 }
