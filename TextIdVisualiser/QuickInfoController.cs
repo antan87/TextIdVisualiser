@@ -1,7 +1,7 @@
-﻿using Microsoft.VisualStudio.Language.Intellisense;
+﻿using System.Collections.Generic;
+using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
-using System.Collections.Generic;
 
 namespace TextIdVisualiser
 {
@@ -14,7 +14,7 @@ namespace TextIdVisualiser
     {
         private ITextView m_textView;
         private readonly IList<ITextBuffer> m_subjectBuffers;
-        private readonly QuickInfoControllerProvider m_provider;
+        private readonly IIntellisenseControllerProvider m_provider;
 
         /// <summary>
         /// Called when a new subject <see cref="T:Microsoft.VisualStudio.Text.ITextBuffer" /> appears in the graph of buffers associated with the <see cref="T:Microsoft.VisualStudio.Text.Editor.ITextView" />, due to a change in projection or content type.
@@ -42,9 +42,7 @@ namespace TextIdVisualiser
         public void Detach(ITextView textView)
         {
             if (this.m_textView == textView)
-            {
                 this.m_textView = null;
-            }
         }
 
         /// <summary>
@@ -54,7 +52,7 @@ namespace TextIdVisualiser
         /// <param name="textView">The text view.</param>
         /// <param name="subjectBuffers">The subject buffers.</param>
         /// <param name="provider">The provider.</param>
-        internal QuickInfoController(ITextView textView, IList<ITextBuffer> subjectBuffers, QuickInfoControllerProvider provider)
+        internal QuickInfoController(ITextView textView, IList<ITextBuffer> subjectBuffers, IIntellisenseControllerProvider provider)
         {
             this.m_textView = textView;
             this.m_subjectBuffers = subjectBuffers;

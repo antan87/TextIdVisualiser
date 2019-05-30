@@ -1,9 +1,9 @@
-﻿using System;
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Operations;
 using Microsoft.VisualStudio.Utilities;
+using TextIdVisualiser.Translators.Interfaces;
 
 namespace TextIdVisualiser
 {
@@ -18,7 +18,6 @@ namespace TextIdVisualiser
     [ContentType("CSharp")]
     internal class QuickInfoSourceProvider : IAsyncQuickInfoSourceProvider
     {
-
         /// <summary>
         /// Gets or sets the navigator service.
         /// </summary>
@@ -35,6 +34,10 @@ namespace TextIdVisualiser
         [Import]
         internal ITextBufferFactoryService TextBufferFactoryService { get; set; }
 
+
+        [Import]
+        internal ITranslatorService TranslatorService { get; set; }
+
         /// <summary>
         /// Tries the create quick information source.
         /// </summary>
@@ -43,7 +46,7 @@ namespace TextIdVisualiser
         /// <returns></returns>
         IAsyncQuickInfoSource IAsyncQuickInfoSourceProvider.TryCreateQuickInfoSource(ITextBuffer textBuffer)
         {
-            return new QuickInfoSource(this, textBuffer);
+            return textBuffer.Properties.GetOrCreateSingletonProperty(() => new QuickInfoSource(this, textBuffer));
         }
     }
 }

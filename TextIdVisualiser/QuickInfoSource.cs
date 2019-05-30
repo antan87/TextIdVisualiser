@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Adornments;
 using Microsoft.VisualStudio.Text.Operations;
-
+using TextIdVisualiser.Elements;
 namespace TextIdVisualiser
 {
     /// <summary>
@@ -17,15 +18,18 @@ namespace TextIdVisualiser
     {
         private readonly QuickInfoSourceProvider m_provider;
         private readonly ITextBuffer m_subjectBuffer;
-        private bool m_isDisposed;
+
+        private static ContainerElement ComposeContainerElement(IEnumerable<TooltipElement> elements)
+        {
+            if (!elements.Any())
+                return null;
+
+            var element = elements.First();
+            return new ContainerElement(element.Style, element.Value);
+        }
 
         public void Dispose()
         {
-            if (!this.m_isDisposed)
-            {
-                GC.SuppressFinalize(this);
-                this.m_isDisposed = true;
-            }
         }
 
         /// <summary>
@@ -35,24 +39,24 @@ namespace TextIdVisualiser
         /// <param name="session">The session.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The <see cref="QuickInfoItem"/></returns>
-        public Task<QuickInfoItem> GetQuickInfoItemAsync(IAsyncQuickInfoSession session, CancellationToken cancellationToken)
+        public async Task<QuickInfoItem> GetQuickInfoItemAsync(IAsyncQuickInfoSession session, CancellationToken cancellationToken)
         {
             SnapshotPoint? subjectTriggerPoint = session.GetTriggerPoint(this.m_subjectBuffer.CurrentSnapshot);
             if (!subjectTriggerPoint.HasValue)
-                return Task.FromResult<QuickInfoItem>(null);
+                return null;
 
             ITextSnapshot currentSnapshot = subjectTriggerPoint.Value.Snapshot;
             ITextStructureNavigator navigator = this.m_provider.NavigatorService.GetTextStructureNavigator(this.m_subjectBuffer);
             TextExtent extent = navigator.GetExtentOfWord(subjectTriggerPoint.Value);
             string searchText = extent.Span.GetText();
-            if (ResourceManagerHelper.TextValues.TryGetValue(searchText, out string value))
-            {
+            var elements = await this.m_provider.TranslatorService.GetTooltipElementsAsync(searchText).ConfigureAwait(false);
+            if (!elements.Any())
+                return null;
 
-                var applicableToSpan = currentSnapshot.CreateTrackingSpan(extent.Span.Start, searchText.Length, SpanTrackingMode.EdgeInclusive);
-                return Task.FromResult(new QuickInfoItem(applicableToSpan, value));
-            }
+            var applicableToSpan = currentSnapshot.CreateTrackingSpan(extent.Span.Start, searchText.Length, SpanTrackingMode.EdgeInclusive);
+            var element = QuickInfoSource.ComposeContainerElement(elements);
 
-            return Task.FromResult<QuickInfoItem>(null);
+            return new QuickInfoItem(applicableToSpan, element);
         }
 
         /// <summary>
