@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
+using TextIdVisualiser.Options;
 
 namespace TextIdVisualiser
 {
@@ -34,7 +35,7 @@ namespace TextIdVisualiser
         /// <returns>A valid IntelliSense controller, or null if none could be created.</returns>
         public IIntellisenseController TryCreateIntellisenseController(ITextView textView, IList<ITextBuffer> subjectBuffers)
         {
-            return new QuickInfoController(textView, subjectBuffers, this);
+            return textView.Properties.GetOrCreateSingletonProperty(() => new QuickInfoController(textView, subjectBuffers, this));
         }
     }
 }

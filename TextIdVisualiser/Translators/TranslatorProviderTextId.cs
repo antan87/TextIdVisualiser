@@ -1,37 +1,23 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Globalization;
+using System.Linq;
 using System.Resources;
+using System.Threading.Tasks;
+using Microsoft.VisualStudio.Text.Adornments;
+using TextIdVisualiser.Elements;
+using TextIdVisualiser.Options;
+using TextIdVisualiser.Translators.Interfaces;
 
-namespace TextIdVisualiser
+namespace TextIdVisualiser.Translators
 {
-    /// <summary>
-    /// Helper class for getting values from the resource manager set.
-    /// </summary>
-    /// <owner>Anton Patron</owner>
-    public static class ResourceManagerHelper
+    [Export(typeof(ITranslatorProvider))]
+    internal sealed class TranslatorProviderTextId : ITranslatorProvider
     {
-
-        /// <summary>
-        /// Holds the list of text values.
-        /// </summary>
-        /// <owner>Anton Patron</owner>
-        private static Dictionary<string, string> textValues;
-
-        /// <summary>
-        /// Gets the values.
-        /// </summary>
-        /// <owner>Anton Patron</owner>
-        /// <returns>The text values.</returns>
-        private static Dictionary<string, string> GetValues()
+        public void Dispose()
         {
-            var list = ResourceManagerHelper.GetTextvalues(ResourceManager.CreateFileBasedResourceManager(Settings.Default.Filename, Settings.Default.Directory_Path, null), new CultureInfo(Settings.Default.Launguage_Id), true);
-            Dictionary<string, string> dic = new Dictionary<string, string>();
-            foreach (var textItem in list)
-                dic[textItem.textId.ToString()] = textItem.text;
-
-            return dic;
         }
 
         /// <summary>
@@ -41,7 +27,7 @@ namespace TextIdVisualiser
         /// <param name="language">The <see cref="CultureInfo"/> specifying the language to search.</param>
         /// <param name="includeParentCultures">The value indicating if the result should include the parent languages.</param>
         /// <returns>A sequence of text cluster id values for texts that match the search words.</returns>
-        private static IEnumerable<(int textId, string text)> GetTextvalues(ResourceManager resourceManager, CultureInfo language, bool includeParentCultures)
+        private static List<(int textId, string text)> GetTextvalues(ResourceManager resourceManager, CultureInfo language, bool includeParentCultures)
         {
             //
             // Include parent cultures if specified.
@@ -51,7 +37,7 @@ namespace TextIdVisualiser
                 //
                 // Call this method recursively to access text clusters registered on parent cultures.
                 //
-                result.AddRange(ResourceManagerHelper.GetTextvalues(resourceManager, language.Parent, true));
+                result.AddRange(TranslatorProviderTextId.GetTextvalues(resourceManager, language.Parent, true));
 
             //
             // Get all the text clusters registered on this culture.
@@ -82,19 +68,38 @@ namespace TextIdVisualiser
         }
 
         /// <summary>
+        /// Gets the values.
+        /// </summary>
+        /// <owner>Anton Patron</owner>
+        /// <returns>The text values.</returns>
+        private async Task<Dictionary<string, string>> GetResourceFileValuesAsync()
+        {
+            var optionsInstance = await GeneralOptions.GetLiveInstanceAsync().ConfigureAwait(false);
+            var manager = ResourceManager.CreateFileBasedResourceManager(optionsInstance.OptionResourceFile, optionsInstance.OptionResourceDirectoryPath, null);
+            return TranslatorProviderTextId.GetTextvalues(manager, new CultureInfo(optionsInstance.LaunguageId), true).
+                   GroupBy(textItem => textItem.textId).
+                   ToDictionary(textItem => textItem.Key.ToString(), textItem => textItem.First().text);
+        }
+
+        public Task<(bool, TooltipElement)> GetTooltipElementAsync(string text)
+        {
+            if (this.TextValues.TryGetValue(text, out string value))
+                return Task.FromResult((true, new TooltipElement(string.Empty, value, ContainerElementStyle.Wrapped)));
+
+            return Task.FromResult<(bool, TooltipElement)>((false, null));
+
+        }
+
+        /// <summary>
         /// Gets the text values.
         /// </summary>
         /// <owner>Anton Patron</owner>
         /// <value>The text values.</value>
-        public static Dictionary<string, string> TextValues
-        {
-            get
-            {
-                if (ResourceManagerHelper.textValues == null)
-                    ResourceManagerHelper.textValues = ResourceManagerHelper.GetValues();
+        private Dictionary<string, string> TextValues { get; }
 
-                return ResourceManagerHelper.textValues;
-            }
+        public TranslatorProviderTextId()
+        {
+            this.TextValues = Microsoft.VisualStudio.Shell.ThreadHelper.JoinableTaskFactory.Run<Dictionary<string, string>>(this.GetResourceFileValuesAsync);
         }
     }
 }
