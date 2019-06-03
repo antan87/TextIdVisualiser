@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Adornments;
 using Microsoft.VisualStudio.Text.Operations;
 using TextIdVisualiser.Elements;
+
 namespace TextIdVisualiser
 {
     /// <summary>
@@ -14,7 +15,7 @@ namespace TextIdVisualiser
     /// </summary>
     /// <owner>Anton Patron</owner>
     /// <seealso cref="Microsoft.VisualStudio.Language.Intellisense.IAsyncQuickInfoSource" />
-    internal class QuickInfoSource : IAsyncQuickInfoSource
+    internal sealed class QuickInfoSource : IAsyncQuickInfoSource
     {
         private readonly QuickInfoSourceProvider m_provider;
         private readonly ITextBuffer m_subjectBuffer;

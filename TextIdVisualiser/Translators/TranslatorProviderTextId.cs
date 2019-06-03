@@ -99,7 +99,7 @@ namespace TextIdVisualiser.Translators
 
         public TranslatorProviderTextId()
         {
-            this.TextValues = Microsoft.VisualStudio.Shell.ThreadHelper.JoinableTaskFactory.Run<Dictionary<string, string>>(this.GetResourceFileValuesAsync);
+            this.TextValues = Microsoft.VisualStudio.Shell.ThreadHelper.JoinableTaskFactory.Run(this.GetResourceFileValuesAsync);
         }
     }
 }
